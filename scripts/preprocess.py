@@ -270,6 +270,19 @@ def preprocess_boku_ndvi(subset_str: str = "kenya"):
     )
 
 
+def preprocess_era5_hourly():
+    data_path = get_data_path()
+
+    regrid_path = data_path / "interim/VCI_preprocessed/data_kenya.nc"
+    assert regrid_path.exists(), f"{regrid_path} not available"
+
+    processor = ERA5HourlyPreprocessor(data_path)
+
+    # W-MON is weekly each monday (the same as the NDVI data from Atzberger)
+    # processor.preprocess(subset_str="kenya", resample_time="W-MON")
+    processor.merge_files(subset_str="W-MON")
+
+    
 def preprocess_s5_ouce():
     if Path(".").absolute().as_posix().split("/")[-1] == "ml_drought":
         data_path = Path("data")
