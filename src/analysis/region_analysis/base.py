@@ -47,6 +47,7 @@ class RegionAnalysis:
         true_data_experiment: str = "one_month_forecast",
         models: Union[List[str], None] = None,
         admin_boundaries: bool = True,
+        models_experiment_dir: Optional[str] = None,
     ):
         """Base RegionAnalysis class.
 

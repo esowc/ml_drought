@@ -4,6 +4,7 @@ from typing import Union, List, Optional
 
 from .nowcast import _NowcastEngineer
 from .one_month_forecast import _OneMonthForecastEngineer
+from .different_training_periods import _DifferentTrainingPeriodsEngineer
 from .base import _EngineerBase
 
 
@@ -25,6 +26,7 @@ class Engineer:
         data_folder: Path = Path("data_path"),
         process_static: bool = True,
         experiment: str = "one_month_forecast",
+        different_training_periods: bool = False,
     ) -> None:
 
         assert experiment in {
@@ -34,7 +36,12 @@ class Engineer:
 
         engineer: _EngineerBase
         if experiment == "one_month_forecast":
-            engineer = _OneMonthForecastEngineer(data_folder, process_static)
+            if different_training_periods:
+                engineer = _DifferentTrainingPeriodsEngineer(
+                    data_folder, process_static
+                )
+            else:
+                engineer = _OneMonthForecastEngineer(data_folder, process_static)
         elif experiment == "nowcast":
             engineer = _NowcastEngineer(data_folder, process_static)
         self.engineer_class = engineer

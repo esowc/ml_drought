@@ -1,4 +1,49 @@
 """
+
+RERUN:
+chose 8 test years?
+test_hilo: high / train_hilo: high / train_length: 5
+_one_month_forecast_TRhigh_TEhigh_LEN5/test
+
+chose 5 test years
+test_hilo: med / train_hilo: high / train_length: 10
+one_month_forecast_TRhigh_TEmed_LEN10/test
+
+chose 2 test years
+test_hilo: low / train_hilo: high / train_length: 20
+one_month_forecast_TRhigh_TElow_LEN20/
+
+chose 5 test years
+test_hilo: med / train_hilo: high / train_length: 10
+one_month_forecast_TRhigh_TEmed_LEN10/
+
+DIDN'T RUN
+test_hilo: med / train_hilo: high / train_length: 5
+one_month_forecast_TRhigh_TEmed_LEN5/
+
+
+
+
+chose 1981 as a test year
+test_hilo: high / train_hilo: med / train_length: 20
+one_month_forecast_TRmed_TEhigh_LEN20/test
+
+ealstm failed
+test_hilo: low / train_hilo: med / train_length: 10
+*one_month_forecast_TRmed_TElow_LEN10/ealstm
+
+only chose 2 test years
+test_hilo: low / train_hilo: med / train_length: 20
+one_month_forecast_TRmed_TElow_LEN20
+
+
+
+chose 1981 as a test year
+test_hilo: high / train_hilo: low / train_length: 5
+one_month_forecast_TRlow_TEhigh_LEN5
+
+
+=======
 RERUN:
 chose 8 test years?
 test_hilo: high / train_hilo: high / train_length: 5
@@ -41,11 +86,11 @@ import sys
 sys.path.append("../..")
 
 from _base_models import persistence, regression, linear_nn, rnn, earnn
-
 from src.analysis import all_explanations_for_file
 from src.analysis import read_train_data, read_test_data
+from src.analysis import all_explanations_for_file
 from src.engineer import Engineer
-from scripts.utils import get_data_path, _rename_directory
+from _base_models import parsimonious, regression, linear_nn, rnn, earnn
 
 
 def sort_by_median_target_variable(

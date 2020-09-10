@@ -97,11 +97,13 @@ class ModelArrays:
         if self.x.current is not None:
             # NOTE: historical times is one less for nowcast?
             assert (
-                len(self.historical_times) == self.x.historical.shape[1]  # type: ignore
+                len(self.historical_times)  # type: ignore
+                == self.x.historical.shape[1]
             ), "second dim is # timesteps"
         else:
             assert (
-                len(self.historical_times) == self.x.historical.shape[1]  # type: ignore
+                len(self.historical_times)  # type: ignore
+                == self.x.historical.shape[1]
             ), "second dim is # timesteps"
         variables = self.x_vars
         latitudes = np.unique(self.latlons[:, 0])  # type: ignore
@@ -208,8 +210,13 @@ def train_val_mask(
     The train mask and the val mask, both as lists
     """
     assert val_ratio < 1, f"Val ratio must be smaller than 1"
-    train_mask = np.random.rand(mask_len) < 1 - val_ratio
-    val_mask = ~train_mask
+    train_mask = np.ones(mask_len).astype("bool")
+    val_mask = np.zeros(mask_len).astype("bool")
+
+    # We don't want ALL values in train and none in val
+    while all(np.array(train_mask)) and all(~np.array(val_mask)):
+        train_mask = np.random.rand(mask_len) < 1 - val_ratio
+        val_mask = ~train_mask
 
     return train_mask.tolist(), val_mask.tolist()
 
@@ -732,6 +739,7 @@ class _BaseIter:
         if self.predict_delta:
             # TODO: do this ONCE not at each read-in of the data
             y = self._calculate_change(x, y)
+
         assert len(list(y.data_vars)) == 1, (
             f"Expect only 1 target variable! " f"Got {len(list(y.data_vars))}"
         )

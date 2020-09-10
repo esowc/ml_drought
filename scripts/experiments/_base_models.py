@@ -28,6 +28,7 @@ def climatology(experiment="one_month_forecast", include_yearly_aggs=False):
     )
 
     predictor.evaluate(save_preds=True)
+    print("\n\n")
 
 
 def regression(
@@ -42,6 +43,7 @@ def regression(
     include_latlons=False,
     include_yearly_aggs=False,
 ):
+    print("\n\n** Regression **")
     predictor = LinearRegression(
         get_data_path(),
         experiment=experiment,
@@ -60,6 +62,7 @@ def regression(
     # mostly to test it works
     if explain:
         predictor.explain(save_shap_values=True)
+    print("\n\n")
 
 
 def linear_nn(
@@ -73,11 +76,13 @@ def linear_nn(
     early_stopping=5,
     layer_sizes=[100],
     predict_delta=False,
+    learning_rate=1e-3,
     spatial_mask=None,
     include_latlons=False,
     include_yearly_aggs=True,
     clear_nans=True,
 ):
+    print("\n\n** Linear Network **")
     predictor = LinearNetwork(
         layer_sizes=layer_sizes,
         data_folder=get_data_path(),
@@ -87,6 +92,11 @@ def linear_nn(
         static=static,
         ignore_vars=ignore_vars,
         predict_delta=predict_delta,
+    )
+    predictor.train(
+        num_epochs=num_epochs,
+        early_stopping=early_stopping,
+        learning_rate=learning_rate,
         spatial_mask=spatial_mask,
         include_latlons=include_latlons,
         include_yearly_aggs=include_yearly_aggs,
@@ -98,6 +108,7 @@ def linear_nn(
 
     if explain:
         _ = predictor.explain(save_shap_values=True)
+    print("\n\n")
 
 
 def rnn(
@@ -111,6 +122,7 @@ def rnn(
     early_stopping=5,
     hidden_size=128,
     predict_delta=False,
+    learning_rate=1e-3,
     spatial_mask=None,
     include_latlons=False,
     normalize_y=True,
@@ -119,6 +131,7 @@ def rnn(
     clear_nans=True,
     weight_observations=False,
 ):
+    print("\n\n** RNN **")
     predictor = RecurrentNetwork(
         hidden_size=hidden_size,
         data_folder=get_data_path(),
@@ -128,6 +141,11 @@ def rnn(
         static=static,
         ignore_vars=ignore_vars,
         predict_delta=predict_delta,
+    )
+    predictor.train(
+        num_epochs=num_epochs,
+        early_stopping=early_stopping,
+        learning_rate=learning_rate,
         spatial_mask=spatial_mask,
         include_latlons=include_latlons,
         normalize_y=normalize_y,
@@ -142,6 +160,7 @@ def rnn(
 
     if explain:
         _ = predictor.explain(save_shap_values=True)
+    print("\n\n")
 
 
 def earnn(
@@ -157,6 +176,7 @@ def earnn(
     static_embedding_size=10,
     hidden_size=128,
     predict_delta=False,
+    learning_rate=1e-3,
     spatial_mask=None,
     include_latlons=False,
     normalize_y=True,
@@ -166,6 +186,7 @@ def earnn(
     weight_observations=False,
     pred_month_static=False,
 ):
+    print("\n\n** EALSTM **")
     data_path = get_data_path()
 
     if not pretrained:
@@ -179,6 +200,11 @@ def earnn(
             static_embedding_size=static_embedding_size,
             ignore_vars=ignore_vars,
             predict_delta=predict_delta,
+        )
+        predictor.train(
+            num_epochs=num_epochs,
+            early_stopping=early_stopping,
+            learning_rate=learning_rate,
             spatial_mask=spatial_mask,
             include_latlons=include_latlons,
             normalize_y=normalize_y,
@@ -198,6 +224,7 @@ def earnn(
         test_file = data_path / f"features/{experiment}/test/2018_3"
         assert test_file.exists()
         all_explanations_for_file(test_file, predictor, batch_size=100)
+    print("\n\n")
 
 
 def gbdt(
@@ -213,6 +240,7 @@ def gbdt(
     include_latlons=False,
     include_yearly_aggs=True,
 ):
+    print("\n\n** GBDT **")
     data_path = get_data_path()
 
     # initialise, train and save GBDT model
@@ -230,3 +258,4 @@ def gbdt(
     predictor.train(early_stopping=5)
     predictor.evaluate(save_preds=True)
     predictor.save_model()
+    print("\n\n")

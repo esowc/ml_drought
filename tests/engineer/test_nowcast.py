@@ -54,7 +54,7 @@ class TestNowcastEngineer:
         engineer = NowcastEngineer(tmp_path)
         train = engineer._train_test_split(
             dataset,
-            years=[2001],
+            test_years=[2001],
             target_variable="VHI",
             expected_length=11,
             pred_months=11,
